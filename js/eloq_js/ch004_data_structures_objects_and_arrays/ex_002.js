@@ -30,5 +30,19 @@
   console.log("get task:", todo_list);
   remember_urgently("pay bill")
   console.log("remember urgently", todo_list);
+
+  // indexOf and lastIndexOf
+  console.log([1, 2, 3, 2, 1].indexOf(2))
+  console.log([1, 2, 3, 2, 1].lastIndexOf(2))
+
+  // slice
+  console.log([0, 1, 2, 3, 4].slice(2, 4))
+  console.log([0, 1, 2, 3, 4].slice(2))
+
+  function remove_from_arr(arr, index) {
+    return arr.slice(0, index)
+      .concat(arr.slice(index + 1))
+  }
+  console.log(remove_from_arr(["a", "b", "c", "d", "e"], 2))
 })()
 
