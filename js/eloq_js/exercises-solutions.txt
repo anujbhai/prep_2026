@@ -1,0 +1,83 @@
+const fizz_buzz = function (num) {
+    for (let i = 1; i <= num; i++) {
+        console.log(
+            (i % 3 === 0) && (i % 5 === 0)
+            ? "FIZZ | B - U - Z - Z"
+            : i % 5 === 0
+                ? "B - U - Z - Z"
+                : i % 3 === 0
+                    ? "FIZZ"
+                    : i
+        );
+    }
+};
+fizz_buzz(15);
+
+const fizz_buzz = function (num) {
+    for (let i = 1; i <= num; i++) {
+        if ((i % 3 === 0) && (i % 5 === 0)) {
+            console.log("FIZZ | B - U - Z - Z");
+        } else if (i % 5 === 0) {
+            console.log("B - U - Z - Z");
+        } else if (i % 3 === 0) {
+            console.log("FIZZ");
+        } else {
+            console.log(i);
+        }
+    }
+};
+fizz_buzz(15);
+
+const fizz_buzz = (n) => {
+    for (let i = 1; i <= n; i++) {
+      switch (true) {
+        case ((i % 3 === 0) && (i % 5 !== 0)):
+          console.log("fizz");
+          break;
+        case ((i % 5 === 0) && (i % 3 !== 0)):
+          console.log("buzz");
+          break;
+        case (i % 5 === 0) && (i % 3 === 0):
+          console.log("fizzbuzz");
+          break;
+        default: console.log(i)
+      }
+    }
+  };
+
+  fizz_buzz(30);
+
+
+
+
+
+
+let chessboard = function(n) {
+    let area = "";
+	
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if ((i + j) % 2 !== 0) {
+                area += "#";
+            }	
+			
+           area += " ";         
+        }
+		
+        area += "\n";
+    }
+    console.log(area);
+};
+
+chessboard(8);
+
+
+
+
+
+const loop_triangle = function(n) {
+    for (let i = "*"; i.length <= n; i += "*") {
+        console.log(i);
+    }
+};
+loop_triangle(12);
