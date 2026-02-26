@@ -54,4 +54,60 @@
   console.log(next.place)
   console.log(next.parcels)
   console.log(first.place)
+
+  // Simulation
+  function run_robot(state, robot, memory) {
+    for (let turn = 0;; turn++) {
+      if (state.parcels.length == 0) {
+        console.log(`Done in ${ turn } turns`)
+        break
+      }
+
+      let action = robot(state, memory)
+      state = state.move(action.direction)
+      memory = action.memory
+      console.log(`Moved to ${ action.direction }`)
+    }
+  }
+
+  function random_pick(arr) {
+    let choice = Math.floor(Math.random() * arr.length)
+    return arr[choice]
+  }
+
+  function random_robot(state) {
+    return { direction: random_pick(road_graph[state.place]) }
+  }
+
+  VillageState.random = function(parcel_count = 5) {
+    let parcels = []
+
+    for (let i = 0; i < parcel_count; i++) {
+      let address = random_pick(Object.keys(road_graph))
+      let place
+
+      do {
+        place = random_pick(Object.keys(road_graph))
+      } while (place == address)
+
+      parcels.push({ place, address })
+    }
+
+    return new VillageState("Post Office", parcels)
+  }
+
+  run_robot(VillageState.random(), random_robot)
+
+  // Mail truck's route (improving robots efficiency)
+  const mail_route = [
+    "Alice's House", "Cabin", "Alice's House", "Bob's House", "Town Hall", "Daria's House", "Ernie's House", "Grete's House", "Shop", "Grete's House", "Farm", "Marketplace", "Post Office"
+  ]
+
+  function route_robot(state, memory) {
+    if (memory.length == 0) {
+      memory = mail_route
+    }
+
+    return { direction: memory[0], memory: memory.slice(1) }
+  }
 })()
