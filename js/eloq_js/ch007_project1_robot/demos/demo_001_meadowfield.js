@@ -181,4 +181,33 @@
   }
   compare_robots(route_robot, [], goal_oriented_robot, [])
   compare_robots(goal_oriented_robot, [], route_robot, [])
+
+  // Ex. 02. bot efficiency
+  function lazy_robot({ place, parcels }, route) {
+    if (route.length == 0) {
+      // Compute routes for every parcel
+      let routes = parcels.map(parcel => {
+        if (parcel.place != place) {
+          return {
+            route: find_route(road_graph, place, parcel.place),
+            pick_up: true
+          }
+        } else {
+          return {
+            route: find_route(road_graph, place, parcel.address),
+            pick_up: false
+          }
+        }
+      })
+
+      function score({ route, pick_up }) {
+        return (pick_up ? 0.5 : 0) - route.length
+      }
+
+      route = routes.reduce((a, b) => score(a) > score(b) ? a : b).route
+    }
+
+    return { direction: route[0], memory: route.slice(1) }
+  }
+  compare_robots(goal_oriented_robot, [], lazy_robot, [])
 })()
