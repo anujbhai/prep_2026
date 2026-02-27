@@ -56,17 +56,30 @@
   console.log(first.place)
 
   // Simulation
+  // ex. 00. Original
+  // function run_robot(state, robot, memory) {
+  //   for (let turn = 0;; turn++) {
+  //     if (state.parcels.length == 0) {
+  //       console.log(`Done in ${ turn } turns`)
+  //       break
+  //     }
+
+  //     let action = robot(state, memory)
+  //     state = state.move(action.direction)
+  //     memory = action.memory
+  //     console.log(`Moved to ${ action.direction }`)
+  //   }
+  // }
+
+  // ex. 01. bot comparision
   function run_robot(state, robot, memory) {
     for (let turn = 0;; turn++) {
       if (state.parcels.length == 0) {
-        console.log(`Done in ${ turn } turns`)
-        break
+        return turn;
       }
-
       let action = robot(state, memory)
       state = state.move(action.direction)
       memory = action.memory
-      console.log(`Moved to ${ action.direction }`)
     }
   }
 
@@ -110,4 +123,62 @@
 
     return { direction: memory[0], memory: memory.slice(1) }
   }
+
+  function find_route(graph, from, to) {
+    let work = [{ at: from, route: [] }]
+
+    for (let i = 0; i < work.length; i++) {
+      let {at, route} = work[i]
+
+      for (let place of graph[at]) {
+        if (place == to) return route.concat(place)
+
+        if (!work.some(w => w.at == place)) {
+          work.push({ at: place, route: route.concat(place) })
+        }
+      }
+    }
+  }
+
+  function goal_oriented_robot({ place, parcels }, route) {
+    if (route.length == 0) {
+      let parcel = parcels[0]
+
+      if (parcel.place != place) {
+        route = find_route(road_graph, place, parcel.place)
+      } else {
+        route = find_route(road_graph, place, parcel.address)
+      }
+    }
+
+    return { direction: route[0], memory: route.slice(1) }
+  }
+
+  // Test route_robot
+  console.log("=== Route Robot ===");
+  run_robot(VillageState.random(), route_robot, []);
+
+  // Test goal_oriented_robot  
+  console.log("=== Goal Oriented Robot ===");
+  run_robot(VillageState.random(), goal_oriented_robot, []);
+
+  function compare_robots(robot1, memory1, robot2, memory2) {
+    let tasks = 100
+    let robot1_total = 0, robot2_total = 0
+
+    for (let i = 0; i < tasks; i++) {
+      let state = VillageState.random()
+
+      robot1_total += run_robot(state, robot1, memory1)
+      robot2_total += run_robot(state, robot2, memory2)
+    }
+
+    let avg1 = Math.round(robot1_total / tasks)
+    let avg2 = Math.round(robot2_total / tasks)
+
+    console.log(`Bot 1: ${ avg1 } avg turns`)
+    console.log(`Bot 2: ${ avg2 } avg turns`)
+  }
+  compare_robots(route_robot, [], goal_oriented_robot, [])
+  compare_robots(goal_oriented_robot, [], route_robot, [])
 })()
