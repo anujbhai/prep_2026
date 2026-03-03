@@ -210,4 +210,41 @@
     return { direction: route[0], memory: route.slice(1) }
   }
   compare_robots(goal_oriented_robot, [], lazy_robot, [])
+
+  // Ex. 03. Persistent Group
+  class PGroup {
+    constructor(members) {
+      this.members = members
+    }
+
+    has(value) {
+      return this.members.includes(value)
+    }
+
+    add(value) {
+      if (this.has(value)) {
+        return this
+      }
+      return new PGroup(this.members.concat(value))
+    }
+
+    delete(value) {
+      if (!this.has(value)) {
+        return this
+      }
+      return new PGroup(this.members.filter(v => v !== value))
+    }
+
+    static get empty() {
+      return new PGroup([])
+    }
+  }
+
+  let a = PGroup.empty.add("a")
+  let ab = a.add("b")
+  let b = ab.delete("a")
+
+  console.log(b.has("b"))
+  console.log(a.has("b"))
+  console.log(b.has("a"))
 })()
