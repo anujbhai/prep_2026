@@ -2,7 +2,8 @@ export function build_graph(edges) {
   let graph = Object.create(null)
 
   function add_edge(from, to) {
-    if (from in graph) {
+    // if (from in graph) {
+    if (graph[from]) { // slightly faster
       graph[from].push(to)
     } else {
       graph[from] = [to]
