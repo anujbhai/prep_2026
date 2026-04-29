@@ -3,6 +3,7 @@
   "dependencies": {
     "date-names": "^0.1.13",
     "ini": "^6.0.0",
+    "jsdom": "^29.0.2",
     "ordinal": "^1.0.3"
   }
 }
