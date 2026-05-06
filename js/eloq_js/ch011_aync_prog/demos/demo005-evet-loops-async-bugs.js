@@ -1,4 +1,4 @@
-import fs from "node:fs"
+import fs from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -17,35 +17,35 @@ console.log("Me first!")
 
 /* Async bugs */
 // Callbacks
-function readTextFile(fileName, callback) {
+async function readTextFile(fileName) {
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = path.dirname(__filename)
   const filePath = path.join(__dirname, fileName)
 
-  fs.readFile(filePath, "utf8", (error, content) => {
-    if (error) {
-      console.error("Unable to read file:", error.message)
-      return
-    }
-
-    callback(content)
-  })
-}
-
-function text_file(file_name) {
-  return new Promise(resolve => {
-    readTextFile(file_name, text => resolve(text))
-  })
+  try {
+    return await fs.readFile(filePath, "utf8")
+  } catch (err) {
+    throw new Error(`Unable to read file: ${ err.message }`)
+  }
 }
 
 async function file_sizes(files) {
-  let list = ""
+  const lines = await Promise.all(
+    files.map(async file_name => {
+      const text = await readTextFile(file_name)
 
-  await Promise.all(files.map(async file_name => {
-    list += file_name + ": " + (await text_file(file_name)).length + "\n"
-  }))
+      return `${ file_name }: ${ text.length }`
+    })
+  )
 
-  return list;
+  return lines.join("\n") + "\n"
+  // let list = ""
+
+  // await Promise.all(files.map(async file_name => {
+  //   list += `${ file_name }: ${ (await readTextFile(file_name)).length }\n`
+  // }))
+
+  // return list;
 }
 const result = await file_sizes(["plans.txt", "listfile.txt"])
 console.log(result)
