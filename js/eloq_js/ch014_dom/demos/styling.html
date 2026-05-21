@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    strong {
+      font-style: italic;
+      color: gray;
+    }
+  </style>
+  <title>Document</title>
+</head>
+<body>
+  <a href="index.html">Back to home</a>
+
+  <p><a href=".">Normal link</a></p>
+  <p><a href="." style="color: chartreuse;">Green link</a></p>
+
+  <p>
+    This text is displayed <strong>inline</strong>,
+    <strong style="display: block;">as a block</strong>, and
+    <strong style="display: none;">not at all</strong>
+  </p>
+
+  <p id="para" style="color: purple">Nice text</p>
+
+  <!-- query selector -->
+  <p>
+    And if you go chasing <span class="animal">rabbits</span>
+  </p>
+  <p>And you know you are going to fall</p>
+  <p>Tell 'em a <span class="char">hookah smoking <span class="animal">caterpillar</span></span></p>
+  <p>Has given you the call</p>
+
+  <script>
+    let para = document.getElementById("para")
+    console.log(para.style.color)
+    para.style.color = "magenta"
+
+    /* query selector */
+    function count(selector) {
+      return document.querySelectorAll(selector).length
+    }
+    console.log(count("p"), "<p>")
+    console.log(count(".animal"), ".animal class")
+    console.log(count("p .animal"), ".animal class inside <p>")
+    console.log(count("p > .animal"), ".animal class that is direct child of <p>")
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>My home page</h1>
+  <p>Hello, I am Anuj and this is my home page.</p>
+  <p>I am reading a book! Read it <a href="http://eloquentjavascript.net">here</a></p>
+
+  <p>My ostrich Gertrude:</p>
+  <p><img id="gertrude" src="images/ostrich.jpg" width="250"/></p>
+  
+  <nav>
+    <ul>
+      <li><a href="changing_doc.html">Changing the document</a></li>
+      <li><a href="creating_nodes.html">Creating nodes</a></li>
+      <li><a href="layout.html">Layout</a></li>
+      <li><a href="styling.html">Styling</a></li>
+      <li><a href="position_&_animation.html">Position & animation</a></li>
+    </ul>
+  </nav>
+
+  <script>
+    function talks_about(node, string) {
+      if (node.nodeType == Node.ELEMENT_NODE) {
+        for (let child of node.childNodes) {
+          if (talks_about(child, string)) {
+            return true
+          }
+        }
+
+        return false
+      } else if (node.nodeType == Node.TEXT_NODE) {
+        return node.nodeValue.indexOf(string) > -1
+      }
+    }
+
+    let link = document.body.getElementsByTagName("a")[0]
+
+    console.log(talks_about(document.body, "book"))
+    console.log(link.href)
+  </script>
+</body>
+</html>

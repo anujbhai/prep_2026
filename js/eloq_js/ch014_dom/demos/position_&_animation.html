@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <a href="index.html">Back to home</a>
+  
+  <p style="text-align: center;">
+    <img style="position: relative;" src="images/cat.jpg" alt="cat" width="100" />
+  </p>
+
+  <script>
+    let cat = document.querySelector("img")
+    let angle = Math.PI / 2
+
+    function animate(time, last_time) {
+      if (last_time != null) {
+        angle += (time - last_time) * 0.001
+      }
+
+      cat.style.top = (Math.sin(angle) * 40) + "px"
+      cat.style.left = (Math.cos(angle) * 200) + "px"
+
+      requestAnimationFrame(new_time => animate(new_time, time))
+    }
+    requestAnimationFrame(animate)
+  </script>
+</body>
+</html>
