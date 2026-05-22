@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Heading with a <span>span</span> element.</h1>
+  <p>A paragraph with <span>one</span>, <span>two</span>.</p>
+
+  <script>
+    /* function with a recursive tree walk */
+    function by_tag_name(node, tag_name) {
+      let found = []
+      tag_name = tag_name.toLowerCase()
+
+      function explore(current_node) {
+        for (let child of current_node.childNodes) {
+          if (
+            child.nodeType === 1 &&
+            child.nodeName.toLowerCase() === tag_name
+          ) {
+            found.push(child)
+          }
+
+          explore(child)
+        }
+      }
+
+      explore(node)
+
+      return found
+    }
+
+    console.log(by_tag_name(document.body, "h1").length)
+    console.log(by_tag_name(document.body, "span").length)
+
+    let para = document.querySelector("p")
+    console.log(by_tag_name(para, "span").length)
+  </script>
+</body>
+</html>
