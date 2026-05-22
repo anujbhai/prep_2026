@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <a href="index.html">Back to home</a>
+  
+  <img id="cat" src="images/cat.jpg" alt="cat" width="100" />
+  <img id="hat" src="images/hat.jpg" alt="hat" width="75" />
+  
+  <script>
+    let cat = document.querySelector("#cat")  
+    let hat = document.querySelector("#hat")  
+    let angle  = 0
+    let last_time = null
+
+    cat.style.position = "absolute"
+    hat.style.position = "absolute"
+
+    function animate(time) {
+      if (last_time != null) {
+        angle += (time - last_time) * 0.001
+      }
+
+      last_time = time
+
+      let center_x = 250
+      let center_y = 150
+      let radius_x = 200
+      let radius_y = 60
+
+      cat.style.left = center_x + Math.cos(angle) * radius_x + "px"
+      cat.style.top = center_y + Math.sin(angle) * radius_y + "px"
+
+      hat.style.left = center_x + Math.cos(angle + Math.PI) * radius_x + "px"
+      hat.style.top = center_y + Math.sin(angle + Math.PI) * radius_y + "px"
+
+      requestAnimationFrame(animate)
+    }
+
+    requestAnimationFrame(animate)
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p><a href="index.html">Back to home</a></p>
+
+  <!-- <table>
+    <tr>
+      <th>name</th>
+      <th>height</th>
+      <th>place</th>
+    </tr>
+    <tr>
+      <td>Kilimanjaro</td>
+      <td>5895</td>
+      <td>Tanzania</td>
+    </tr>
+  </table> -->
+
+  <div id="mountains"></div>
+
+  <script>
+    const data = [
+      {
+        name: "Kilimanjaro",
+        height: 5896,
+        place: "Tanzania"
+      },
+      {
+        name: "Fuji",
+        height: 3776,
+        place: "Japan"
+      },
+      {
+        name: "Gulmarg",
+        height: 3980,
+        place: "India"
+      }
+    ]
+
+    function build_table(data) {
+      const table = document.createElement("table")
+      const fields = Object.keys(data[0]) // get the keys of the direct child of data
+
+      const head_row = document.createElement("tr") // one tr for heading
+
+      for (const field of fields) { // loop through the number of keys (fields)
+        const head_cell = document.createElement("th")
+        head_cell.textContent = field; // assign text content to th
+        head_row.appendChild(head_cell)
+      }
+
+      table.appendChild(head_row)
+
+      for (const item of data) {
+        const row = document.createElement("tr") // create one row for each object entry in data (direct child)
+
+        for (const field of fields) {
+          const body_cell = document.createElement("td")
+          const cell_value = item[field] // retrieve the value of each key inside item (object entry)
+
+          body_cell.textContent = cell_value // assign text content to td (value of each key)
+
+          if (typeof value === "number") {
+            body_cell.style.textAlign = "right"
+          }
+
+          row.appendChild(body_cell)
+        }
+
+        table.appendChild(row)
+      }
+
+      return table
+    }
+
+    document.getElementById("mountains").appendChild(build_table(data))
+  </script>
+</body>
+</html>
