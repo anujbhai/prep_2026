@@ -20,7 +20,7 @@ class HooksDemo(AgentMiddleware):
   def before_model(self, state: AgentState, runtime):
     print("before_model")
   
-  def after_agent(self, state: AgentState, runtime):
+  def after_model(self, state: AgentState, runtime):
     print("after_model")
   
   def after_agent(self, state: AgentState, runtime):
