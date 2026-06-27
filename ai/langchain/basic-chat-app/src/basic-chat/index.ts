@@ -1,80 +1,91 @@
 import Groq from "groq-sdk"
 import llama3Tokenizer from "llama3-tokenizer-js"
 
+interface ContextMessage {
+  role: "system" | "user" | "assistant"
+  content: string
+  tokenCount: number
+}
+
 const groq = new Groq()
 
 async function init() {
-  // const tokenizer = llama3Tokenizer.("llama-3.3-70b-versatile")
   const MAX_TOKENS = 700
 
-  const context: Groq.Chat.Completions.ChatCompletionMessageParam[] = [{
+  const context: ContextMessage[] = [{
     role: "system",
-    content: "You are a helpful chatbot"
+    content: "You are a helpful chatbot",
+    tokenCount: llama3Tokenizer.encode("You are a helpful chatbot").length
   }]
 
+  let total_tokens = context[0].tokenCount
+
   async function createChatCompletion() {
+    const messages = context.map(({ role, content }) => ({
+      role,
+      content
+    }))
+
     const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: context
+      model: process.env.MODEL ?? "llama-3.3-70b-versatile",
+      messages
     })
 
     const responseMessage = response.choices[0].message
+    const assistantContent = typeof responseMessage.content === "string"
+      ? responseMessage.content
+      : ""
+    const assistantTokens = llama3Tokenizer.encode(assistantContent).length
 
-    context.push(responseMessage)
+    context.push({
+      role: "assistant",
+      content: assistantContent,
+      tokenCount: assistantTokens
+    })
 
-    if (response.usage && response.usage.total_tokens > MAX_TOKENS) {
+    total_tokens += assistantTokens
+
+    if (total_tokens > MAX_TOKENS) {
       deleteOlderMessages()
     }
 
-    console.log(`${response.choices[0].message.role}: ${response.choices[0].message.content}`)
+    console.log(`${responseMessage.role}: ${responseMessage.content}`)
   }
 
-  process.stdin.addListener("data", async function(input) {
+  process.stdin.on("data", async (input) => {
     const user_input = input.toString().trim()
+    const user_tokens = llama3Tokenizer.encode(user_input).length
+    
     context.push({
       role: "user",
-      content: user_input
+      content: user_input,
+      tokenCount: user_tokens
     })
+
+    total_tokens += user_tokens
 
     await createChatCompletion()
   })
 
   function deleteOlderMessages() {
-    let contextLength = getContextLength()
 
-    while (contextLength > MAX_TOKENS) {
+    while (total_tokens > MAX_TOKENS) {
       for (let i = 0; i < context.length; i++) {
         const message = context[i]
 
-        if (message.role != "system") {
-          context.splice(i, 1)
-          contextLength = getContextLength()
+        if (message.role !== "system") {
+          debugger
+          const removedMessage = context.splice(i, 1)[0]
+          total_tokens -= removedMessage.tokenCount
           
-          console.log("New context length: " + contextLength)
+          console.log("New context length: " + total_tokens)
           break
         }
       }
     }
   }
-
-  function getContextLength() {
-    let tokenLength = 0
-
-    context.forEach((message) => {
-      if (typeof message.content === "string") {
-        tokenLength += llama3Tokenizer.encode(message.content).length
-      } else if (Array.isArray(message.content)) {
-        message.content.forEach((contentItem) => {
-          if (contentItem.type === "text") {
-            tokenLength += llama3Tokenizer.encode(contentItem.text).length
-          }
-        })
-      }
-    })
-
-    return tokenLength
-  }
 }
+
 init().catch((err) => {
   console.error("Error initializing the chatbot:", err)
 })
