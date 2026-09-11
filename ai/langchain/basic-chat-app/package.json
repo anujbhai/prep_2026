@@ -1,0 +1,21 @@
+{
+  "name": "basic-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node -r ts-node/register --env-file=.env src/basic-chat/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "groq-sdk": "^1.3.0",
+    "llama3-tokenizer-js": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
